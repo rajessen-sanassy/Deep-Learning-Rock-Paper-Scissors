@@ -1,0 +1,126 @@
+//Colors
+@white: #fff;
+@black: #000;
+@lime-white: #F7F9FC;
+
+body {
+  background-color: @lime-white !important;
+}
+
+
+// Header
+header {
+  z-index: 10;
+  height: 80px;
+  width: 100%;
+  position: relative;
+  top: 0px;
+  .inner-header {
+      padding-left: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      .logo {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          a { 
+              padding-left: 3.25rem;
+              font-weight: 700;
+              font-size: 1rem;
+              text-decoration: none;
+              letter-spacing: 1px;
+              color: @black;
+              text-transform: uppercase;
+              margin-left: -2.75rem;
+              // span {
+              //     font-weight: 300;
+              // }
+          }
+      }
+      .navigation {
+          // position: relative;
+          // top: 10px;
+          nav {
+              padding-right: 50px;
+              a {
+                  font-weight: 700;
+                  margin: 0 20px;
+                  text-decoration: none;
+                  letter-spacing: 0.75px;
+                  text-transform: uppercase;
+                  font-size: 0.75rem;
+                  color: @black;
+              }
+          }
+      }
+  }
+}
+
+// Footer
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 12px;
+    text-align: center;
+}
+
+// Home
+.home-layout {
+  display: flex;
+  justify-content: center;
+}
+
+.stream {
+  max-width: 640px;
+  margin-top: 100px;
+  position: relative;
+  img {
+    width: 640px;
+    height: 480px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 22px;
+    box-shadow: 5px 12px 21px -1px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.progress-bar {
+  z-index: 1;
+  background-color: @primary-color;
+  height: 8px;
+  margin-top: 24px;
+  border-radius: 4px;
+  transition: width 0.2s ease-in-out;
+  div {
+    z-index: -1;
+    width: 640px;
+    height: 8px;
+    background-color: #000;
+    opacity: 0.2;
+    border-radius: 4px;
+  }
+}
+
+.info-card {
+  position: absolute;
+  right: -125px;
+  top: -75px;
+  width: 260px;
+  background-color: @white;
+  border-radius: 22px;
+  box-shadow: 5px 12px 21px -1px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  .info-title {
+    font-size: 24px;
+    color: @primary-color;
+    font-weight: 500;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+  }
+}
+
+.ant-btn {
+  border-radius: 12px !important;
+}

@@ -1,6 +1,10 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { message } from 'antd'
+import axios from 'axios'
 
 export const CoreContext = createContext()
+
+const DEV_URL = "http://localhost:5000/"
 
 export const CoreProvider = ({children}) => {
     const [user, setUser] = useState(null)
@@ -20,6 +24,16 @@ export const CoreProvider = ({children}) => {
                 completeTutorial: () => {
                     localStorage.setItem('seenTutorial', true)
                     setShowTutorial(false)
+                },
+
+                getMove: () => {
+                    try {
+                        const result = axios.get(DEV_URL + 'getMove')
+                        console.log(result)
+                    } catch (error) {
+                        console.log(error)
+                        message("Unable to get move.")
+                    }
                 },
             }}
         >

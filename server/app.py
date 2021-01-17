@@ -20,6 +20,11 @@ from threading import Thread
 import time
 import os
 
+from ai_algorithm import Markov_Chain
+
+markov = Markov_Chain(1, True, 0.7)
+history = None
+
 app = Flask(
     __name__,
     static_folder='./client/build',
@@ -61,7 +66,6 @@ class User(db.Model):
         self.name = name
         self.loginID = 0
 
-
 def generateFrames(face_detect=False):
     while True:
         buffer, user_move, img = process()
@@ -70,6 +74,58 @@ def generateFrames(face_detect=False):
         yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 # Routes -------
+@app.route('/playMove')
+def playMove():
+    # get moves
+    moveMap = {
+        'rock': 'R',
+        'scissors': 'S',
+        'paper': 'P',
+        'lizard': 'L',
+        'spock': 'K',
+        'loading..': False,
+        'none': False
+    }
+
+    playerMove = moveMap[getMove()]
+    if playerMove == False:
+        return "retry"
+
+    beat = {'R': ['P', 'K'], 'P': ['S', 'L'], 'S':['R', 'K'], 'L':['R', 'S'], 'K':['P', 'L']}
+
+    if markov.loss_streak > 2:
+        pc_move = random.choice(['R', 'P', 'S', 'L', 'K'])
+    elif markov.history:
+        pc_move = markov.compute(beat[markov.predict(markov.history)], markov.history)
+    else:
+        pc_move = 'P'
+    
+    # compute who won
+    result = ""
+    
+    if (pc_move == playerMove):
+        outcome = 'L'
+        result = 'tie'
+    elif pc_move in beat[playerMove]:
+        outcome = 'L'
+        result = 'loss'
+        markov.loss_streak = 0
+    else:
+        outcome = 'W'
+        result = 'win'
+        markov.loss_streak += 1
+    
+    # update history
+    if markov.history:
+        markov.update(playerMove, markov.history)
+    markov.history = playerMove + outcome
+
+    return jsonify(
+        player_move=playerMove,
+        pc_move=pc_move,
+        result=result
+    )
+
 @app.route('/createDB')
 def createDB():
     db.create_all()
@@ -120,6 +176,13 @@ def getSnapshots():
         return f'{snapshots[0].id}'
     return run_transaction(sessionmaker, callback)
 
+@app.route('/getUserCount')
+def getUserCount():
+    def callback(session):
+        users = session.query(User).all()
+        return len(users)
+    return run_transaction(sessionmaker, callback)
+
 @app.route('/login')
 def login():
 
@@ -132,20 +195,17 @@ def login():
         
         if os.path.exists(f'snapshots/{snapID}.jpg'):
             image = cv2.imread(f'snapshots/{snapID}.jpg')
-
-            print(image.size)
-
             result = verify(image)
         else:
             print(snapID)
             print("does not exist")
         
-    if(result == "unknown"): return f'Your id: is unknown '
+    if(result == "unknown"): return f'unknown'
 
     user = db.session.query(User).filter_by(loginID = result).one()
     print(user)
 
-    return f'Your id:{user.name}' #name or unknown
+    return user.name
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -160,18 +220,21 @@ def signup():
     """
 
     user = createUser(request.form['name'])
-    user.loginID = int(str(user.id)[-6:])
+    user.loginID = getUserCount() + 1
     db.session.commit()
 
-    print(user.loginID)
+    print("user login ID:", user.loginID)
 
     count = 1
 
-    while count < 30:
+    while count != 0:
         snapID = getSnapshots()
         if os.path.exists(f'snapshots/{snapID}.jpg'):
+            print("Gathering photos")
+            print(count)
             image = cv2.imread(f'snapshots/{snapID}.jpg')
             count = gatheringImages(image, user.loginID)
+            print(count)
     
     createModel()
 
@@ -235,4 +298,3 @@ def deleteSnapshots():
     
     run_transaction(sessionmaker, callback)
 
-    

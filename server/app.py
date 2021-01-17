@@ -1,10 +1,11 @@
 import cv2
+import random
 from datetime import datetime
 from queue import Queue
 from base64 import b64encode
 
 from flask import Flask, Response, jsonify, url_for, redirect, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy.orm
@@ -27,9 +28,11 @@ history = None
 
 app = Flask(
     __name__,
-    static_folder='./client/build',
+    static_folder='../client/build',
     static_url_path='/'
 )
+
+CORS(app)
 
 app.config.from_pyfile('app.cfg')
 db = SQLAlchemy(app)
@@ -185,6 +188,9 @@ def getUserCount():
 
 @app.route('/login')
 def login():
+    print("\n\n\n\n\n\n")
+    print("scanning")
+    print("\n\n\n\n\n\n")
 
     result = None
 
@@ -219,6 +225,8 @@ def signup():
         image = cv2.imread("studytonight.png")
     """
 
+    print(request.form)
+
     user = createUser(request.form['name'])
     user.loginID = getUserCount() + 1
     db.session.commit()
@@ -229,6 +237,7 @@ def signup():
 
     while count != 0:
         snapID = getSnapshots()
+        print(snapID)
         if os.path.exists(f'snapshots/{snapID}.jpg'):
             print("Gathering photos")
             print(count)
@@ -284,7 +293,7 @@ def deleteSnapshots():
         snapshots = Snapshot.query.order_by(Snapshot.timestamp.desc()).all()
 
         for i in range(len(snapshots)):
-            if(i == 0): continue
+            if(i < 5): continue
             db.session.delete(snapshots[i])
 
             path = f'snapshots/{snapshots[i].id}.jpg'

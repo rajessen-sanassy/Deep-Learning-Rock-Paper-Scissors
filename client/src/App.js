@@ -9,11 +9,11 @@ import { CoreProvider } from './components/Provider';
 function App() {
   return (
     <div className="App">
-      <CoreProvider>
-        <BrowserRouter>
-          <RootLayout/>
-        </BrowserRouter>
-      </CoreProvider>
+      <BrowserRouter>
+        <CoreProvider>        
+            <RootLayout/>
+        </CoreProvider>
+      </BrowserRouter>
     </div>
   );
 }

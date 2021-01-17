@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from '../pages/Home';
+import AppRouter from '../AppRouter';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -7,7 +7,7 @@ const RootLayout = () => {
     return (
         <div className="root-layout">
             <Header/>
-                <Home/>
+            <AppRouter/>
             <Footer/>
         </div>
     );

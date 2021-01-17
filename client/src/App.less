@@ -67,7 +67,7 @@ header {
 }
 
 // Home
-.home-layout {
+.home-layout, .game-layout {
   display: flex;
   justify-content: center;
 }
@@ -77,11 +77,41 @@ header {
   margin-top: 100px;
   position: relative;
   img {
-    width: 640px;
-    height: 480px;
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 22px;
-    box-shadow: 5px 12px 21px -1px rgba(0, 0, 0, 0.25);
+    &:not(.move-icon){
+      width: 640px;
+      height: 480px;
+      background-color: rgba(0, 0, 0, 0.25);
+      border-radius: 22px;
+      box-shadow: 5px 12px 21px -1px rgba(0, 0, 0, 0.25);
+    }
+  }
+  .game-btn{
+    z-index: 1000;
+    position: absolute;
+    bottom: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+  }
+  .game-progress-bar {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 1s linear, background-color 1s ease;
+    div {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  .result {
+    position: absolute;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    text-align: center;
   }
 }
 
@@ -123,4 +153,100 @@ header {
 
 .ant-btn {
   border-radius: 12px !important;
+}
+
+.move-history{
+  display: flex;
+  flex-direction: column;
+}
+
+.move-icon {
+  width: 60px;
+  height: 60px;
+}
+
+//scoreCard
+.score-card {
+  position: absolute;
+  bottom: -75px;
+  width: 160px;
+  background-color: @white;
+  border-radius: 22px;
+  box-shadow: 5px 12px 21px -1px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  text-align: center;
+  &.right {
+    right: -80px;
+    // text-align: right;
+  }
+  &.right-glow {
+    box-shadow: 5px 12px 21px -1px rgba(0, 255, 0, 0.45);
+  }
+  &:not(.right) {
+    left: -80px;
+  }
+  .name{
+    font-weight: 500;
+  }
+  .score{
+    font-size: 32px;
+    line-height: 1;
+  }
+}
+
+.card-glow {
+  box-shadow: -5px 12px 21px -1px rgba(0, 255, 0, 0.45);
+}
+
+//info
+.move-history {
+  z-index: -2;
+  position: absolute;
+  bottom: 80px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  &.right {
+    right: -90px;
+  }
+  &:not(.right) {
+    left: -90px;
+  }
+  img {
+    &:nth-child(1) {
+      opacity: 0.8;
+    }
+    &:nth-child(2) {
+      opacity: 0.6;
+    }
+    &:nth-child(3) {
+      opacity: 0.4;
+    }
+    &:nth-child(4) {
+      opacity: 0.3;
+    }
+    &:nth-child(5) {
+      opacity: 0.2;
+    }
+    &:nth-child(6) {
+      opacity: 0.1;
+    }
+  }
+}
+
+.about-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding-left: 50px;
+  h1{
+    font-size: 48px;
+    font-weight: 300;
+  }
+  img{
+    width: 450px;
+  }
+  p {
+    font-size: 16px;
+  }
 }
